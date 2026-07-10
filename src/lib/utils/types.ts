@@ -1,3 +1,5 @@
+import { readableTextColor } from "./contrast";
+
 export const TYPE_COLORS: Record<string, string> = {
   bug: "#a8b820",
   dark: "#705848",
@@ -30,25 +32,6 @@ export function typeGradient(type: string): string {
   return `linear-gradient(160deg, ${color} 0%, color-mix(in srgb, ${color} 60%, black) 100%)`;
 }
 
-function relativeLuminance(hex: string): number {
-  const rgb = [1, 3, 5].map(
-    (i) => Number.parseInt(hex.slice(i, i + 2), 16) / 255
-  );
-  const [r, g, b] = rgb.map((c) =>
-    c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4
-  );
-  return 0.2126 * (r ?? 0) + 0.7152 * (g ?? 0) + 0.0722 * (b ?? 0);
-}
-
-function contrastRatio(hexA: string, hexB: string): number {
-  const lA = relativeLuminance(hexA) + 0.05;
-  const lB = relativeLuminance(hexB) + 0.05;
-  return lA > lB ? lA / lB : lB / lA;
-}
-
 export function typeTextColor(type: string): string {
-  const bg = typeColor(type);
-  return contrastRatio(bg, "#1c1c28") >= contrastRatio(bg, "#ffffff")
-    ? "#1c1c28"
-    : "#ffffff";
+  return readableTextColor(typeColor(type));
 }

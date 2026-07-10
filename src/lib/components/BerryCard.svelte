@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { formatName, capitalize } from '$lib/utils/format';
-	import { flavorColor } from '$lib/utils/flavors';
+	import { flavorColor, flavorTextColor } from '$lib/utils/flavors';
 	import { base } from '$app/paths';
 	import type { Berry } from '$lib/api/schemas';
 
@@ -33,8 +33,8 @@
 	</p>
 	{#if topFlavor && topFlavor.potency > 0}
 		<span
-			class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-white shadow-sm"
-			style="background-color: {flavorColor(topFlavor.flavor.name)}"
+			class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold uppercase tracking-wide shadow-sm"
+			style="background-color: {flavorColor(topFlavor.flavor.name)}; color: {flavorTextColor(topFlavor.flavor.name)}"
 		>
 			{formatName(topFlavor.flavor.name)}
 		</span>

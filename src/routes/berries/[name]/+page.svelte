@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { formatName, capitalize } from '$lib/utils/format';
-	import { flavorColor } from '$lib/utils/flavors';
+	import { flavorColor, flavorTextColor } from '$lib/utils/flavors';
 	import TypeBadge from '$lib/components/TypeBadge.svelte';
 	import { base } from '$app/paths';
 	import type { PageProps } from './$types';
@@ -63,11 +63,11 @@
 			{#each berry.flavors as f (f.flavor.name)}
 				{#if f.potency > 0}
 					<span
-						class="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-semibold text-white shadow-sm"
-						style="background-color: {flavorColor(f.flavor.name)}"
+						class="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-semibold shadow-sm"
+						style="background-color: {flavorColor(f.flavor.name)}; color: {flavorTextColor(f.flavor.name)}"
 					>
 						{capitalize(f.flavor.name)}
-						<span class="text-white/80">{f.potency}</span>
+						<span class="opacity-80">{f.potency}</span>
 					</span>
 				{/if}
 			{/each}
