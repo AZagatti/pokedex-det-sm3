@@ -8,8 +8,10 @@ import { error } from "@sveltejs/kit";
 
 import type { PageLoad } from "./$types";
 
+export const prerender = false;
+
 export const load: PageLoad = async ({ fetch, params }) => {
-  let pokemon: Awaited<ReturnType<typeof getPokemon>>;
+  let pokemon;
   try {
     pokemon = await getPokemon(fetch, params.name);
   } catch {
