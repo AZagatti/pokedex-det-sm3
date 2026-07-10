@@ -38,7 +38,7 @@
 			height="120"
 			class="h-28 w-28 object-contain drop-shadow-md transition-transform duration-200 ease-out group-hover:scale-110 motion-reduce:group-hover:scale-100"
 		/>
-		<h3 class="mt-1 text-base font-bold text-white drop-shadow-sm">{formatName(name)}</h3>
+		<h2 class="mt-1 text-base font-bold text-white drop-shadow-sm">{formatName(name)}</h2>
 		<div class="mt-2 flex gap-1.5">
 			{#each types as t (t)}
 				<TypeBadge type={t} size="sm" />

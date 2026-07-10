@@ -27,7 +27,7 @@
 		height="64"
 		class="h-16 w-16 object-contain transition-transform duration-200 ease-out group-hover:scale-110 motion-reduce:group-hover:scale-100"
 	/>
-	<h3 class="text-sm font-bold">{formatName(berry.name)} Berry</h3>
+	<h2 class="text-sm font-bold">{formatName(berry.name)} Berry</h2>
 	<p class="text-xs text-slate-500 dark:text-slate-400">
 		{capitalize(berry.firmness.name)} firmness
 	</p>
