@@ -19,7 +19,3 @@ export async function cachedFetch<T>(
   cache.set(url, parsed);
   return parsed;
 }
-
-export function clearCache(): void {
-  cache.clear();
-}

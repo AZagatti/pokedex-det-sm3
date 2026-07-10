@@ -109,8 +109,3 @@ export function getBerry(
     berrySchema.parse(data)
   );
 }
-
-export function idFromUrl(url: string): number {
-  const parts = url.split("/").filter(Boolean);
-  return Number(parts.at(-1));
-}

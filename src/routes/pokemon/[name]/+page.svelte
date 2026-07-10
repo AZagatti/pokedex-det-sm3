@@ -46,8 +46,12 @@
 	const cryUrl = $derived(pokemon.cries?.latest ?? null);
 	let audioEl: HTMLAudioElement | undefined = $state();
 
-	function playCry() {
-		audioEl?.play();
+	async function playCry() {
+		try {
+			await audioEl?.play();
+		} catch {
+			// autoplay/decode failures are non-critical; ignore
+		}
 	}
 </script>
 
@@ -69,6 +73,8 @@
 		class="relative overflow-hidden rounded-3xl px-6 py-8 text-white shadow-lg sm:px-10 sm:py-10"
 		style="background: {gradient}"
 	>
+		<div class="absolute inset-0 bg-black/10"></div>
+		<div class="relative">
 		<div class="absolute right-4 top-4 z-10 flex items-center gap-2">
 			{#if cryUrl}
 				<button
@@ -123,6 +129,7 @@
 					</span>
 				{/if}
 			</div>
+		</div>
 		</div>
 	</div>
 

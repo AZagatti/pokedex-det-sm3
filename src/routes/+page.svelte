@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { getGenerationDetail, getGenerationList, getTypeDetail, getTypeList, idFromUrl } from '$lib/api/client';
+	import { getGenerationDetail, getGenerationList, getTypeDetail, getTypeList } from '$lib/api/client';
 	import PokemonCard from '$lib/components/PokemonCard.svelte';
 	import PokemonCardSkeleton from '$lib/components/PokemonCardSkeleton.svelte';
-	import { formatName } from '$lib/utils/format';
+	import { formatName, idFromUrl } from '$lib/utils/format';
 	import type { PageProps } from './$types';
 
 	const { data }: PageProps = $props();
@@ -29,8 +29,9 @@
 	let typeOptions = $state<string[]>([]);
 	let generationOptions = $state<{ name: string; label: string }[]>([]);
 	let typeFilterIds = $state<Set<number> | null>(null);
-	let generationFilterIds = $state<Set<number> | null>(null);
+	let generationSpeciesNames = $state<Set<string> | null>(null);
 	let filterLoading = $state(false);
+	let filterError = $state('');
 
 	$effect(() => {
 		async function loadFilters() {
@@ -51,20 +52,67 @@
 			return;
 		}
 		filterLoading = true;
-		const detail = await getTypeDetail(fetch, selectedType);
-		typeFilterIds = new Set(detail.pokemon.map((p) => idFromUrl(p.pokemon.url)));
-		filterLoading = false;
+		filterError = '';
+		try {
+			const detail = await getTypeDetail(fetch, selectedType);
+			typeFilterIds = new Set(detail.pokemon.map((p) => idFromUrl(p.pokemon.url)));
+		} catch {
+			filterError = 'Could not load that type filter. Please try again.';
+			selectedType = '';
+			typeFilterIds = null;
+		} finally {
+			filterLoading = false;
+		}
 	}
 
 	async function onGenerationChange() {
 		if (!selectedGeneration) {
-			generationFilterIds = null;
+			generationSpeciesNames = null;
 			return;
 		}
 		filterLoading = true;
-		const detail = await getGenerationDetail(fetch, selectedGeneration);
-		generationFilterIds = new Set(detail.pokemon_species.map((p) => idFromUrl(p.url)));
-		filterLoading = false;
+		filterError = '';
+		try {
+			const detail = await getGenerationDetail(fetch, selectedGeneration);
+			generationSpeciesNames = new Set(detail.pokemon_species.map((p) => p.name));
+		} catch {
+			filterError = 'Could not load that generation filter. Please try again.';
+			selectedGeneration = '';
+			generationSpeciesNames = null;
+		} finally {
+			filterLoading = false;
+		}
+	}
+
+	const FORM_SUFFIXES = [
+		'-alola',
+		'-galar',
+		'-hisui',
+		'-paldea',
+		'-mega',
+		'-mega-x',
+		'-mega-y',
+		'-gmax',
+		'-totem',
+		'-primal',
+		'-origin',
+		'-therian',
+		'-incarnate',
+		'-crowned',
+		'-eternamax',
+		'-partner',
+		'-starter',
+		'-world-cap',
+		'-cap'
+	];
+
+	function baseSpeciesName(name: string): string {
+		for (const suffix of FORM_SUFFIXES) {
+			if (name.endsWith(suffix)) {
+				return name.slice(0, -suffix.length);
+			}
+		}
+		return name;
 	}
 
 	const filtered = $derived.by(() => {
@@ -76,8 +124,10 @@
 		if (typeFilterIds) {
 			list = list.filter((p) => typeFilterIds?.has(p.id));
 		}
-		if (generationFilterIds) {
-			list = list.filter((p) => generationFilterIds?.has(p.id));
+		if (generationSpeciesNames) {
+			list = list.filter(
+				(p) => generationSpeciesNames?.has(p.name) || generationSpeciesNames?.has(baseSpeciesName(p.name))
+			);
 		}
 		const sorted = [...list];
 		if (sortBy === 'name') {
@@ -121,7 +171,8 @@
 		selectedGeneration = '';
 		sortBy = 'id';
 		typeFilterIds = null;
-		generationFilterIds = null;
+		generationSpeciesNames = null;
+		filterError = '';
 	}
 </script>
 
@@ -136,6 +187,9 @@
 		<p class="text-slate-600 dark:text-slate-400">
 			{filtered.length} Pokémon found
 		</p>
+		{#if filterError}
+			<p class="text-sm font-medium text-rose-600 dark:text-rose-400" role="alert">{filterError}</p>
+		{/if}
 
 		<div class="flex flex-col gap-3 sm:flex-row sm:items-center">
 			<div class="relative flex-1">

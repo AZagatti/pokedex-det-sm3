@@ -1,9 +1,5 @@
-import {
-  getPokemonList,
-  getTypeList,
-  getTypeDetail,
-  idFromUrl,
-} from "$lib/api/client";
+import { getPokemonList, getTypeDetail, getTypeList } from "$lib/api/client";
+import { idFromUrl } from "$lib/utils/format";
 
 import type { PageLoad } from "./$types";
 

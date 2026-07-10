@@ -17,8 +17,7 @@
 	const gradient = $derived(typeGradient(types[0] ?? 'normal'));
 </script>
 
-<a
-	href="{base}/pokemon/{name}"
+<div
 	class="group relative flex flex-col overflow-hidden rounded-2xl border border-black/5 bg-white shadow-sm transition-[transform,box-shadow] duration-200 ease-out hover:-translate-y-1 hover:shadow-lg motion-reduce:hover:translate-y-0 dark:border-white/10 dark:bg-slate-800"
 	data-testid="pokemon-card"
 >
@@ -26,7 +25,10 @@
 	<div class="absolute right-2 top-2 z-10">
 		<FavoriteButton {name} />
 	</div>
-	<div class="relative z-[1] flex flex-1 flex-col items-center px-4 pb-4 pt-6">
+	<a
+		href="{base}/pokemon/{name}"
+		class="relative z-[1] flex flex-1 flex-col items-center px-4 pb-4 pt-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
+	>
 		<span class="self-start text-xs font-semibold text-white/80">{padId(id)}</span>
 		<img
 			src={artwork}
@@ -42,5 +44,5 @@
 				<TypeBadge type={t} size="sm" />
 			{/each}
 		</div>
-	</div>
-</a>
+	</a>
+</div>

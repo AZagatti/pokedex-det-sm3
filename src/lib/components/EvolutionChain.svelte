@@ -8,7 +8,9 @@
 
 	function flatten(link: EvolutionChainLink): EvolutionChainLink[][] {
 		if (link.evolves_to.length === 0) {return [[link]];}
-		return link.evolves_to.map((child) => [link, ...flatten(child)[0]]);
+		return link.evolves_to.flatMap((child) =>
+			flatten(child).map((path) => [link, ...path])
+		);
 	}
 
 	const stages = $derived(flatten(chain));

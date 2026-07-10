@@ -14,13 +14,16 @@
 		async function loadFavorites() {
 			loading = true;
 			try {
-				const results = await Promise.all(
+				const results = await Promise.allSettled(
 					names.map(async (name) => {
 						const p = await getPokemon(fetch, name);
 						return { id: p.id, name: p.name, types: p.types.map((t) => t.type.name) };
 					})
 				);
-				entries = results.toSorted((a, b) => a.id - b.id);
+				entries = results
+					.filter((r) => r.status === 'fulfilled')
+					.map((r) => r.value)
+					.toSorted((a, b) => a.id - b.id);
 			} finally {
 				loading = false;
 			}

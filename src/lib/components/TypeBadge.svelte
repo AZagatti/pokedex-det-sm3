@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { typeColor } from '$lib/utils/types';
+	import { typeColor, typeTextColor } from '$lib/utils/types';
 	import { formatName } from '$lib/utils/format';
 
 	const { type, size = 'md' }: { type: string; size?: 'sm' | 'md' } = $props();
@@ -8,8 +8,8 @@
 </script>
 
 <span
-	class="inline-flex items-center rounded-full font-semibold uppercase tracking-wide text-white shadow-sm {sizeClasses}"
-	style="background-color: {typeColor(type)}"
+	class="inline-flex items-center rounded-full font-semibold uppercase tracking-wide shadow-sm {sizeClasses}"
+	style="background-color: {typeColor(type)}; color: {typeTextColor(type)}"
 >
 	{formatName(type)}
 </span>
